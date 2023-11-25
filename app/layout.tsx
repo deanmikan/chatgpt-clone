@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Lato } from "next/font/google";
 import "./globals.css";
 import SupabaseProvider from "@/providers/SupabaseProvider";
+import UserProvider from "@/providers/UserProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,7 +26,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={lato.className}>
-        <SupabaseProvider>{children}</SupabaseProvider>
+        <SupabaseProvider>
+          <UserProvider>{children}</UserProvider>
+        </SupabaseProvider>
       </body>
     </html>
   );

@@ -1,10 +1,13 @@
-import AuthExamplesAnimation from "@/components/auth/AuthExamplesAnimation";
+import AuthExamplesAnimation from "@/app/(site)/auth/_components/AuthExamplesAnimation";
 
 import dynamic from "next/dynamic";
 
-const AuthForm = dynamic(() => import("@/components/auth/AuthForm"), {
-  ssr: false,
-});
+const AuthForm = dynamic(
+  () => import("@/app/(site)/auth/_components/AuthForm"),
+  {
+    ssr: false,
+  }
+);
 
 interface AuthPageProps {}
 
@@ -32,7 +35,7 @@ export default function AuthPage({}: AuthPageProps) {
       </div>
 
       <div className="relative flex grow flex-col items-center justify-between bg-white px-5 py-8 text-black dark:bg-black dark:text-white sm:rounded-t-[30px] md:rounded-none md:px-6">
-        <nav className="flex w-full justify-start px-6 pb-8 md:hidden md:px-6 lg:px-8">
+        <nav className="flex justify-start w-full px-6 pb-8 md:hidden md:px-6 lg:px-8">
           <h1 aria-label="ChatGPT by OpenAI">
             <div className="flex cursor-default items-center text-[20px] font-bold leading-none lg:text-[22px]">
               <div>
@@ -43,7 +46,7 @@ export default function AuthPage({}: AuthPageProps) {
           </h1>
         </nav>
 
-        <div className="relative flex w-full grow flex-col items-center justify-center">
+        <div className="relative flex flex-col items-center justify-center w-full grow">
           <h2 className="text-center font-bold text-[20px] leading-[1.2] md:text-[32px] md:leading-8">
             Get started
           </h2>
@@ -52,7 +55,7 @@ export default function AuthPage({}: AuthPageProps) {
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col justify-center ">
+        <div className="flex flex-col justify-center mt-10 ">
           {/* TODO: Add personal logo */}
           <div className="flex justify-center text-[#cdcdcd] md:mb-3">
             <span className="h-[22px] w-auto">Dean Mikan</span>
