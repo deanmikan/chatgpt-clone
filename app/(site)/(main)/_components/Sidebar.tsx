@@ -1,15 +1,19 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { ChevronsLeft, MenuIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useRef, ElementRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
+import { FiEdit } from "react-icons/fi";
+import SidebarItem from "./SidebarItem";
+import OpenAILogo from "./OpenAILogo";
+import { useUser } from "@/hooks/useUser";
 
 interface SidebarProps {}
 
 export default function Sidebar({}: SidebarProps) {
   const isMobile = useMediaQuery("(max-width: 200px)");
+  const { user } = useUser();
 
   const isResizingRef = useRef(false);
   const sidebarRef = useRef<ElementRef<"aside">>(null);
@@ -62,17 +66,41 @@ export default function Sidebar({}: SidebarProps) {
       <aside
         ref={sidebarRef}
         className={cn(
-          "relative z-10 flex flex-col h-full overflow-y-auto group/sidebar bg-black w-60 transition-all duration-200",
+          "relative z-10 flex flex-col h-full overflow-y-auto group/sidebar bg-black w-60 transition-all duration-200 overflow-x-hidden",
           isResetting && "transition-all ease-in-out duration-300",
           isMobile && "w-0",
           isHoveringToggle || isCollapsed
-            ? "filter brightness-75"
+            ? "filter brightness-50"
             : "filter brightness-100"
         )}
       >
-        <div className="flex-none bg-red-100">GPTs section</div>
-        <div className="flex-1 overflow-y-auto bg-yellow-100">Threads</div>
-        <div className="flex-none h-20 bg-green-100">Auth profile</div>
+        <div className="flex-none p-3">
+          <SidebarItem
+            leadingExtension={OpenAILogo}
+            title="ChatGPT"
+            icon={FiEdit}
+            variant="bold"
+          />
+        </div>
+        <div className="flex-1 overflow-x-hidden overflow-y-auto ">Threads</div>
+        <div className="flex-none p-3 overflow-x-hidden">
+          {user && (
+            <SidebarItem
+              className="h-12 p-3"
+              leadingExtension={
+                <div
+                  aria-hidden
+                  className="flex items-center justify-center text-black bg-[#925CB1] rounded-full w-8 h-8"
+                >
+                  <span className="text-xs text-white">DM</span>
+                </div>
+              }
+              title={user.email!}
+              icon={FiEdit}
+              variant="bold"
+            />
+          )}
+        </div>
       </aside>
 
       <div
