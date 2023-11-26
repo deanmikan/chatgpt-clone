@@ -109,7 +109,7 @@ export default function Sidebar({}: SidebarProps) {
         onClick={toggleSidebar}
         role="button"
         className={cn(
-          "absolute w-8 h-20 transition-all rounded-sm text-muted-foreground top-1/2 group opacity-20 hover:opacity-100 -translate-y-1/2 flex items-center justify-center duration-200",
+          "absolute w-8 h-20 transition-all rounded-sm text-muted-foreground top-1/2 group opacity-20 hover:opacity-100 -translate-y-1/2 flex items-center justify-center duration-200 z-20",
           isMobile && "opacity-100",
           isCollapsed ? "left-0" : "left-60"
         )}
