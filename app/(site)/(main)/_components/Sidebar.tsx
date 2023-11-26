@@ -89,6 +89,7 @@ export default function Sidebar({}: SidebarProps) {
             title="ChatGPT"
             icon={FiEdit}
             variant="bold"
+            href="/"
           />
         </div>
         <div className="flex-1 p-3 overflow-x-hidden overflow-y-auto">
@@ -100,6 +101,7 @@ export default function Sidebar({}: SidebarProps) {
                 key={conversation.id}
                 title={conversation.title}
                 variant="normal"
+                href={`/c/${conversation.id}`}
               />
             ))
           )}

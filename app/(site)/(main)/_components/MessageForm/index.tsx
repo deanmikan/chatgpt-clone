@@ -17,7 +17,9 @@ import { useUser } from "@/hooks/useUser";
 import { useConversationsStore, useMessagesStore } from "@/store/conversations";
 import { useRouter } from "next/navigation";
 
-interface MessageFormProps {}
+interface MessageFormProps {
+  conversationId: string;
+}
 
 // Create a context to hold the register function
 export const RegisterContext = createContext<{
@@ -29,7 +31,7 @@ export const RegisterContext = createContext<{
 
 export const useRegister = () => useContext(RegisterContext);
 
-export default function MessageForm({}: MessageFormProps) {
+export default function MessageForm({ conversationId }: MessageFormProps) {
   const router = useRouter();
 
   const { register, handleSubmit, getValues, reset, watch } =
@@ -52,19 +54,25 @@ export default function MessageForm({}: MessageFormProps) {
       return;
     }
 
-    // Start new conversation
-    const newConversation = await createConversation({
-      user_id: user.id,
-    });
+    let messageConversationId = conversationId;
 
-    if (!newConversation) {
-      console.error("Could not create conversation");
-      return;
+    if (!messageConversationId) {
+      // Start new conversation
+      const newConversation = await createConversation({
+        user_id: user.id,
+      });
+
+      if (!newConversation) {
+        console.error("Could not create conversation");
+        return;
+      }
+
+      messageConversationId = newConversation.id;
     }
 
     // Add the user's first message to the conversation
     const newMessage = await createMessage({
-      conversationId: newConversation.id,
+      conversationId: messageConversationId,
       content: userInput,
       threadKey: "1",
     });
@@ -73,7 +81,11 @@ export default function MessageForm({}: MessageFormProps) {
 
     reset();
 
-    router.push(`/c/${newConversation.id}`);
+    if (!conversationId) {
+      router.push(`/c/${messageConversationId}`);
+
+      return;
+    }
   };
 
   return (
@@ -82,7 +94,7 @@ export default function MessageForm({}: MessageFormProps) {
         value={{ register, watch, handleSubmit, onSubmit }}
       >
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
-          <MessageFormHintsContainer />
+          {!conversationId && <MessageFormHintsContainer />}
 
           <MessageBox />
         </form>

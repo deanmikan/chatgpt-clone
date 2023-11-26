@@ -1,3 +1,8 @@
+export enum MessageRole {
+  Human = "human",
+  Assistant = "assistant",
+}
+
 export interface Profile {
   id: string;
   email: string;
@@ -8,6 +13,7 @@ export type Message = {
   content: string;
   conversation_id: string;
   thread_key: string;
+  role: MessageRole;
 };
 
 export type Conversation = {
