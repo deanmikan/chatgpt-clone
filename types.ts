@@ -1,5 +1,5 @@
 export enum MessageRole {
-  Human = "human",
+  User = "user",
   Assistant = "assistant",
 }
 

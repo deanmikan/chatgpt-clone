@@ -95,6 +95,7 @@ export const useMessagesStore = create<MessagesState>((set, get) => {
           conversation_id: conversationId,
           content: content,
           thread_key: threadKey,
+          role: "user",
         })
         .select("*")
         .single();

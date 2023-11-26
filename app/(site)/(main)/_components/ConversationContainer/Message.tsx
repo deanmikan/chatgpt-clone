@@ -9,7 +9,7 @@ interface MessageProps {
 export default function Message({ message }: MessageProps) {
   const messageRoleToName = (role: string) => {
     switch (role) {
-      case "human":
+      case "user":
         return "You";
       case MessageRole.Assistant:
         return "MikanGPT";
@@ -25,7 +25,7 @@ export default function Message({ message }: MessageProps) {
         <div className="relative flex flex-col items-end flex-shrink-0">
           <div className="pt-0.5">
             <div className="flex items-center justify-center w-6 h-6 overflow-hidden rounded-full bg-[#925CB1] text-white text-[0.5rem]">
-              {message.role === MessageRole.Human ? (
+              {message.role === MessageRole.User ? (
                 <span>DM</span>
               ) : (
                 <OpenAILogo size="xs" />

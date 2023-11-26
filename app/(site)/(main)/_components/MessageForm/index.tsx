@@ -16,6 +16,7 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useUser } from "@/hooks/useUser";
 import { useConversationsStore, useMessagesStore } from "@/store/conversations";
 import { useRouter } from "next/navigation";
+import { generateResponse } from "@/actions/responses";
 
 interface MessageFormProps {
   conversationId: string;
@@ -44,8 +45,6 @@ export default function MessageForm({ conversationId }: MessageFormProps) {
   const { user } = useUser();
 
   const onSubmit: SubmitHandler<FieldValues> = async (values) => {
-    console.log("Form submission", values);
-
     const userInput = values.userInput;
 
     if (!userInput || !user) {
@@ -71,13 +70,15 @@ export default function MessageForm({ conversationId }: MessageFormProps) {
     }
 
     // Add the user's first message to the conversation
-    const newMessage = await createMessage({
+    await createMessage({
       conversationId: messageConversationId,
       content: userInput,
       threadKey: "1",
     });
 
-    console.log("New message", newMessage);
+    generateResponse({
+      conversationId: messageConversationId,
+    });
 
     reset();
 
