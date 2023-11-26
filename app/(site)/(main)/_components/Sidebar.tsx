@@ -6,8 +6,8 @@ import { useRef, ElementRef, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { FiEdit } from "react-icons/fi";
 import SidebarItem from "./SidebarItem";
-import OpenAILogo from "./OpenAILogo";
 import { useUser } from "@/hooks/useUser";
+import OpenAILogo from "@/components/OpenAILogo";
 
 interface SidebarProps {}
 
@@ -67,7 +67,7 @@ export default function Sidebar({}: SidebarProps) {
         ref={sidebarRef}
         className={cn(
           "relative z-10 flex flex-col h-full overflow-y-auto group/sidebar bg-black w-60 transition-all duration-200 overflow-x-hidden",
-          isResetting && "transition-all ease-in-out duration-300",
+          isResetting && "transition-all ease-in-out duration-200",
           isMobile && "w-0",
           isHoveringToggle || isCollapsed
             ? "filter brightness-50"
@@ -76,13 +76,15 @@ export default function Sidebar({}: SidebarProps) {
       >
         <div className="flex-none p-3">
           <SidebarItem
-            leadingExtension={OpenAILogo}
+            leadingExtension={<OpenAILogo size="sm" />}
             title="ChatGPT"
             icon={FiEdit}
             variant="bold"
           />
         </div>
-        <div className="flex-1 overflow-x-hidden overflow-y-auto ">Threads</div>
+        <div className="flex-1 p-3 px-6 overflow-x-hidden overflow-y-auto">
+          <span className="text-sm text-white/40">No conversations</span>
+        </div>
         <div className="flex-none p-3 overflow-x-hidden">
           {user && (
             <SidebarItem
@@ -107,7 +109,7 @@ export default function Sidebar({}: SidebarProps) {
         onClick={toggleSidebar}
         role="button"
         className={cn(
-          "absolute w-8 h-20 transition-all rounded-sm text-muted-foreground top-1/2 group opacity-20 hover:opacity-100 -translate-y-1/2 flex items-center justify-center duration-300",
+          "absolute w-8 h-20 transition-all rounded-sm text-muted-foreground top-1/2 group opacity-20 hover:opacity-100 -translate-y-1/2 flex items-center justify-center duration-200",
           isMobile && "opacity-100",
           isCollapsed ? "left-0" : "left-60"
         )}
