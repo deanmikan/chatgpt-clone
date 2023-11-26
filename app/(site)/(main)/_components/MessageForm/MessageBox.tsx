@@ -1,25 +1,16 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { FaArrowUp } from "react-icons/fa6";
 import TextareaAutosize from "react-textarea-autosize";
 
 import { cn } from "@/lib/utils";
+import { RegisterContext } from ".";
 
 export default function MessageBox() {
   const [isFocused, setIsFocused] = useState(false);
-  const [userInput, setUserInput] = useState<string>("");
+  const { register, watch, handleSubmit, onSubmit } =
+    useContext(RegisterContext);
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      handleSubmit();
-    }
-  };
-
-  const handleSubmit = () => {
-    // Handle form submission logic here
-    console.log("Form submitted:", userInput);
-    setUserInput("");
-  };
+  const userInput = watch("userInput");
 
   return (
     <div
@@ -29,15 +20,19 @@ export default function MessageBox() {
       )}
     >
       <TextareaAutosize
+        {...register("userInput", { required: true })}
+        id="userInput"
         tabIndex={0}
-        rows={1}
         placeholder="Message MikanGPT..."
         className="m-0 w-full resize-none border-0 bg-transparent py-2 pr-10 focus:ring-0 focus-visible:ring-0 md:py-4 md:pr-12 pl-3 max-h-[200px] h-[52px] focus:outline-none overflow-y-hidden"
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        onChange={(e) => setUserInput(e.target.value)}
-        onKeyDown={handleKeyDown}
-        value={userInput}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" && !event.shiftKey) {
+            event.preventDefault();
+            handleSubmit(onSubmit)();
+          }
+        }}
       />
       <button
         className={cn(
@@ -47,7 +42,6 @@ export default function MessageBox() {
             : "bg-gray-400 text-white opacity-40"
         )}
         disabled={!userInput}
-        onClick={handleSubmit}
       >
         <FaArrowUp className="text-base" />
       </button>

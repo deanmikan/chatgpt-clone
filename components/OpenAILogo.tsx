@@ -40,8 +40,6 @@ export default function OpenAILogo({ size = "md" }: OpenAILogoProps) {
       className={`flex-none inline-flex items-center justify-center text-black bg-white rounded-full ${width} ${height}`}
     >
       <svg
-        width={width}
-        height={height}
         viewBox="0 0 41 41"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

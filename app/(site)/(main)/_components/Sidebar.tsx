@@ -2,12 +2,13 @@
 
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
-import { useRef, ElementRef, useState } from "react";
+import { useRef, ElementRef, useState, useEffect } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { FiEdit } from "react-icons/fi";
 import SidebarItem from "./SidebarItem";
 import { useUser } from "@/hooks/useUser";
 import OpenAILogo from "@/components/OpenAILogo";
+import { useConversationsStore } from "@/store/conversations";
 
 interface SidebarProps {}
 
@@ -20,6 +21,10 @@ export default function Sidebar({}: SidebarProps) {
   const [isResetting, setIsResetting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
   const [isHoveringToggle, setIsHoveringToggle] = useState(false);
+  const conversations = useConversationsStore((state) => state.conversations);
+  const fetchConversations = useConversationsStore(
+    (state) => state.fetchConversations
+  );
 
   const handleMouseDown = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -61,6 +66,10 @@ export default function Sidebar({}: SidebarProps) {
     else collapse();
   };
 
+  useEffect(() => {
+    fetchConversations();
+  }, []);
+
   return (
     <>
       <aside
@@ -82,8 +91,18 @@ export default function Sidebar({}: SidebarProps) {
             variant="bold"
           />
         </div>
-        <div className="flex-1 p-3 px-6 overflow-x-hidden overflow-y-auto">
-          <span className="text-sm text-white/40">No conversations</span>
+        <div className="flex-1 p-3 overflow-x-hidden overflow-y-auto">
+          {conversations.length === 0 ? (
+            <div>No conversations</div>
+          ) : (
+            conversations.map((conversation) => (
+              <SidebarItem
+                key={conversation.id}
+                title={conversation.title}
+                variant="normal"
+              />
+            ))
+          )}
         </div>
         <div className="flex-none p-3 overflow-x-hidden">
           {user && (
