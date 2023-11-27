@@ -46,8 +46,12 @@ export default function MessageForm({ conversationId }: MessageFormProps) {
   const onSubmit: SubmitHandler<FieldValues> = async (values, event) => {
     const selectedModel = models.find((model) => model.id === selectedModelId);
 
-    const submitEvent = event?.nativeEvent as SubmitEvent;
-    const submitter: HTMLElement = submitEvent.submitter!;
+    const submitEvent = event?.nativeEvent as SubmitEvent | undefined;
+    let submitter: HTMLElement | undefined;
+
+    if (submitEvent) {
+      submitter = submitEvent.submitter as HTMLElement;
+    }
 
     let userInput = "";
 
@@ -95,6 +99,10 @@ export default function MessageForm({ conversationId }: MessageFormProps) {
 
     reset();
 
+    if (!conversationId) {
+      router.push(`/c/${messageConversationId}`);
+    }
+
     // Then create the assistant's first message
     const newMessage = await createMessage({
       role: "assistant",
@@ -106,10 +114,6 @@ export default function MessageForm({ conversationId }: MessageFormProps) {
     if (!newMessage) {
       console.error("Could not create message");
       return;
-    }
-
-    if (!conversationId) {
-      router.push(`/c/${messageConversationId}`);
     }
 
     // Initiate a response stream
