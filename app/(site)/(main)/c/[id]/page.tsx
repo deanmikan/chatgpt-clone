@@ -37,7 +37,7 @@ export default function ConversationPage({
     <div className="flex h-full">
       <Sidebar />
 
-      <main className="flex flex-col flex-1 h-full overflow-y-auto transition-all">
+      <main className="flex flex-col flex-1 h-full overflow-y-auto">
         <ConversationContainer conversationId={params.id} />
 
         <MessageForm conversationId={params.id} />

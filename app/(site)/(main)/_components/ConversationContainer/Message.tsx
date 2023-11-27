@@ -19,7 +19,7 @@ export default function Message({ message }: MessageProps) {
   };
 
   return (
-    <div className="justify-center w-full p-4 py-2 m-auto">
+    <div className="flex w-full p-4 py-2 m-auto ">
       <div className="flex flex-1 gap-4 group mx-auto md:max-w-2xl lg:max-w-[38rem] xl:max-w-3xl w-full">
         {/* Avatar */}
         <div className="relative flex flex-col items-end flex-shrink-0">

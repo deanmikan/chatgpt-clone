@@ -2,6 +2,7 @@ import OpenAILogo from "@/components/OpenAILogo";
 import Header from "./Header";
 import { useMessagesStore } from "@/store/conversations";
 import Message from "./Message";
+import { cn } from "@/lib/utils";
 
 interface ConversationContainerProps {
   conversationId: string;
@@ -16,7 +17,7 @@ export default function ConversationContainer({
   );
 
   return (
-    <div className="relative flex-1 overflow-hidden">
+    <div className={cn("relative flex-1", conversationId && "overflow-y-auto")}>
       <Header />
 
       {!conversationId ? (
@@ -31,10 +32,12 @@ export default function ConversationContainer({
           </div>
         </div>
       ) : (
-        <div className="flex flex-col h-full overflow-y-auto">
-          {conversationMessages.map((message) => (
-            <Message key={message.id} message={message} />
-          ))}
+        <div className="relative flex-1 ">
+          <div className="h-full overflow-y-auto">
+            {conversationMessages.map((message) => (
+              <Message key={message.id} message={message} />
+            ))}
+          </div>
         </div>
       )}
     </div>
