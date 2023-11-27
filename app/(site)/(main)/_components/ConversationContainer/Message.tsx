@@ -41,9 +41,9 @@ export default function Message({ message }: MessageProps) {
           <p className="whitespace-pre-line">{message.content}</p>
 
           {/* Controls */}
-          <div className="invisible empty:hidden group-hover:visible">
+          {/* <div className="invisible empty:hidden group-hover:visible">
             <MessageControls message={message} />
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

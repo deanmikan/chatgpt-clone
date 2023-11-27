@@ -9,12 +9,6 @@ import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 
 export const runtime = "edge";
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-  { auth: { persistSession: false } }
-);
-
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 
 export async function POST(request: Request) {

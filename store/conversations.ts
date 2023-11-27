@@ -63,7 +63,7 @@ type MessagesState = {
     conversationId,
     content,
     threadKey,
-    role = "user",
+    role,
   }: {
     conversationId: string;
     content: string;
