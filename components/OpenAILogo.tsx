@@ -1,10 +1,15 @@
+import { cn } from "@/lib/utils";
 import React from "react";
 
 interface OpenAILogoProps {
   size?: "xs" | "sm" | "md" | "lg" | "xl";
+  className?: string;
 }
 
-export default function OpenAILogo({ size = "md" }: OpenAILogoProps) {
+export default function OpenAILogo({
+  size = "md",
+  className,
+}: OpenAILogoProps) {
   let width, height;
 
   switch (size) {
@@ -37,7 +42,10 @@ export default function OpenAILogo({ size = "md" }: OpenAILogoProps) {
   return (
     <div
       aria-hidden
-      className={`flex-none inline-flex items-center justify-center text-black bg-white rounded-full ${width} ${height}`}
+      className={cn(
+        `flex-none inline-flex items-center justify-center rounded-full ${width} ${height}`,
+        className
+      )}
     >
       <svg
         viewBox="0 0 41 41"

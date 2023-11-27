@@ -1,25 +1,36 @@
-"use server";
+import { OpenAIStream, StreamingTextResponse } from "ai";
 
-import OpenAI from "openai";
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
 import { createClient } from "@supabase/supabase-js";
 import { DateTime } from "luxon";
+import { cookies } from "next/headers";
+import OpenAI from "openai";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
+
+export const runtime = "edge";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+  { auth: { persistSession: false } }
 );
+
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 
-export async function generateResponse({
-  conversationId,
-}: {
-  conversationId: string;
-}) {
+export async function POST(request: Request) {
+  const supabase = createServerComponentClient({
+    cookies: () => cookies(),
+  });
+  const user_id =
+    (await (await supabase.auth.getUser()).data?.user?.id) ?? null;
+  const json = await request.json();
+
+  // All messges that aren't empty
   const { data: messagesData, error: messagesError } = await supabase
     .from("messages")
     .select("*")
-    .eq("conversation_id", conversationId);
+    .eq("conversation_id", json.conversationId)
+    .neq("content", "");
 
   if (messagesError) throw messagesError;
 
@@ -44,23 +55,13 @@ export async function generateResponse({
     }),
   ];
 
-  const mostRecentMessage = messagesData[messagesData.length - 1];
-
-  console.log("messages", messages);
-
-  const completionResponse = await openai.chat.completions.create({
+  const completionStream = await openai.chat.completions.create({
     model: "gpt-3.5-turbo-1106",
     messages: messages,
+    stream: true,
   });
 
-  let response = completionResponse.choices[0].message.content as string;
-
-  const { error: responseError } = await supabase.from("messages").insert({
-    conversation_id: conversationId,
-    role: "assistant",
-    content: response.trim(),
-    thread_key: mostRecentMessage.thread_key,
-  });
-
-  if (responseError) throw responseError;
+  // Respond with the stream
+  const stream = OpenAIStream(completionStream);
+  return new StreamingTextResponse(stream);
 }

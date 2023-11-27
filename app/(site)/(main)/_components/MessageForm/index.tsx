@@ -1,22 +1,18 @@
+import { createContext, useContext } from "react";
 import {
   FieldValues,
-  FormState,
   SubmitHandler,
-  UseFormGetValues,
   UseFormHandleSubmit,
   UseFormRegister,
   UseFormWatch,
   useForm,
 } from "react-hook-form";
-import { createContext, useContext } from "react";
 
-import MessageBox from "./MessageBox";
-import MessageFormHintsContainer from "./MessageFormHintsContainer";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useUser } from "@/hooks/useUser";
 import { useConversationsStore, useMessagesStore } from "@/store/conversations";
 import { useRouter } from "next/navigation";
-import { generateResponse } from "@/actions/responses";
+import MessageBox from "./MessageBox";
+import MessageFormHintsContainer from "./MessageFormHintsContainer";
 
 interface MessageFormProps {
   conversationId: string;
@@ -41,6 +37,7 @@ export default function MessageForm({ conversationId }: MessageFormProps) {
     (state) => state.createConversation
   );
   const createMessage = useMessagesStore((state) => state.createMessage);
+  const updateMessage = useMessagesStore((state) => state.updateMessage);
 
   const { user } = useUser();
 
@@ -76,17 +73,68 @@ export default function MessageForm({ conversationId }: MessageFormProps) {
       threadKey: "1",
     });
 
-    generateResponse({
+    // Then create the assistant's first message
+    const newMessage = await createMessage({
+      role: "assistant",
       conversationId: messageConversationId,
+      content: "",
+      threadKey: "1",
     });
+
+    if (!newMessage) {
+      console.error("Could not create message");
+      return;
+    }
 
     reset();
 
     if (!conversationId) {
       router.push(`/c/${messageConversationId}`);
+    }
 
+    // Initiate a response stream
+    const response = await fetch("/api/messages", {
+      method: "POST",
+      body: JSON.stringify({
+        conversationId: messageConversationId,
+        content: userInput,
+        threadKey: "1",
+      }),
+    });
+
+    if (!response.ok) {
+      console.error("Could not create message");
       return;
     }
+
+    const data = response.body;
+
+    if (!data) return;
+
+    const reader = data.getReader();
+    const decoder = new TextDecoder("utf-8");
+    let done = false;
+    let finalString = "";
+
+    while (!done) {
+      const { value, done: doneReading } = await reader.read();
+
+      done = doneReading;
+      const chunkValue = decoder.decode(value);
+      finalString += chunkValue;
+
+      updateMessage(
+        {
+          id: newMessage.id,
+          content: finalString,
+        },
+        {
+          greedy: true,
+        }
+      );
+    }
+
+    console.log("DONE", finalString);
   };
 
   return (

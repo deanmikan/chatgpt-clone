@@ -63,11 +63,27 @@ type MessagesState = {
     conversationId,
     content,
     threadKey,
+    role = "user",
   }: {
     conversationId: string;
     content: string;
     threadKey: string;
+    role?: "user" | "assistant";
   }) => Promise<Message | undefined>;
+  updateMessage: (
+    {
+      id,
+      content,
+    }: {
+      id: string;
+      content: string;
+    },
+    {
+      greedy,
+    }: {
+      greedy?: boolean;
+    }
+  ) => Promise<Message | undefined>;
 };
 
 export const useMessagesStore = create<MessagesState>((set, get) => {
@@ -88,14 +104,19 @@ export const useMessagesStore = create<MessagesState>((set, get) => {
 
       set({ messages });
     },
-    createMessage: async ({ conversationId, content, threadKey }) => {
+    createMessage: async ({
+      conversationId,
+      content,
+      threadKey,
+      role = "user",
+    }) => {
       const { data, error } = await supabase
         .from("messages")
         .insert({
           conversation_id: conversationId,
           content: content,
           thread_key: threadKey,
-          role: "user",
+          role: role,
         })
         .select("*")
         .single();
@@ -108,6 +129,52 @@ export const useMessagesStore = create<MessagesState>((set, get) => {
       if (data) {
         await set((state) => ({
           messages: [...state.messages, data],
+        }));
+      }
+
+      return data as Message;
+    },
+    updateMessage: async ({ id, content }, { greedy = false }) => {
+      console.log("updateMessage", id, content);
+
+      if (greedy) {
+        await set((state) => ({
+          messages: state.messages.map((message) => {
+            if (message.id === id) {
+              return {
+                ...message,
+                content,
+              };
+            }
+
+            return message;
+          }),
+        }));
+      }
+
+      const { data, error } = await supabase
+        .from("messages")
+        .update({
+          content,
+        })
+        .eq("id", id)
+        .select("*")
+        .single();
+
+      if (error) {
+        console.error("THERE WAS AN ERROR", data, error);
+        return;
+      }
+
+      if (data && !greedy) {
+        await set((state) => ({
+          messages: state.messages.map((message) => {
+            if (message.id === id) {
+              return data as Message;
+            }
+
+            return message;
+          }),
         }));
       }
 

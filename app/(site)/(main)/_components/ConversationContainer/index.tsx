@@ -31,7 +31,7 @@ export default function ConversationContainer({
           </div>
         </div>
       ) : (
-        <div className="flex flex-col">
+        <div className="flex flex-col h-full overflow-y-auto">
           {conversationMessages.map((message) => (
             <Message key={message.id} message={message} />
           ))}

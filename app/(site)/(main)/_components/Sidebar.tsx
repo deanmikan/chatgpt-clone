@@ -85,7 +85,9 @@ export default function Sidebar({}: SidebarProps) {
       >
         <div className="flex-none p-3">
           <SidebarItem
-            leadingExtension={<OpenAILogo size="sm" />}
+            leadingExtension={
+              <OpenAILogo size="sm" className="text-black bg-white" />
+            }
             title="ChatGPT"
             icon={FiEdit}
             variant="bold"

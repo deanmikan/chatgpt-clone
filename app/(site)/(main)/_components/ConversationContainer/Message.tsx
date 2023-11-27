@@ -38,7 +38,7 @@ export default function Message({ message }: MessageProps) {
         <div className="relative flex flex-col">
           <div className="font-bold">{messageRoleToName(message.role)}</div>
 
-          <p>{message.content}</p>
+          <p className="whitespace-pre-line">{message.content}</p>
 
           {/* Controls */}
           <div className="invisible empty:hidden group-hover:visible">
