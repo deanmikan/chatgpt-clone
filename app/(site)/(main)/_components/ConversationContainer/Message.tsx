@@ -1,6 +1,7 @@
 import { Message, MessageRole } from "@/types";
 import MessageControls from "./MessageControls";
 import OpenAILogo from "@/components/OpenAILogo";
+import { DominoSpinner } from "react-spinners-kit";
 
 interface MessageProps {
   message: Message;
@@ -38,7 +39,13 @@ export default function Message({ message }: MessageProps) {
         <div className="relative flex flex-col">
           <div className="font-bold">{messageRoleToName(message.role)}</div>
 
-          <p className="whitespace-pre-line">{message.content}</p>
+          {message.content ? (
+            <p className="whitespace-pre-line">{message.content}</p>
+          ) : (
+            <div className="mt-1">
+              <DominoSpinner size={60} color="#925CB1" />
+            </div>
+          )}
 
           {/* Controls */}
           {/* <div className="invisible empty:hidden group-hover:visible">
