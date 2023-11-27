@@ -34,6 +34,22 @@ export async function POST(request: Request) {
 
   if (messagesError) throw messagesError;
 
+  // If there is only one message, let's also create a title for the conversation.
+  if (messagesData.length === 1) {
+    let newTitle = "TESTING";
+
+    const { data: titleData, error: titleError } = await supabase
+      .from("conversations")
+      .update({ title: newTitle })
+      .eq("id", json.conversationId);
+
+    if (titleError) {
+      console.log("titleError", titleError);
+    }
+
+    console.log("titleData", titleData);
+  }
+
   // Sort by created_at descending
   messagesData.sort((a, b) => {
     return (
@@ -56,7 +72,7 @@ export async function POST(request: Request) {
   ];
 
   const completionStream = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo-1106",
+    model: json.model ?? "gpt-3.5-turbo-1106",
     messages: messages,
     stream: true,
   });

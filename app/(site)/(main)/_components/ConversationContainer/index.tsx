@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { useRef, useEffect } from "react";
 
 interface ConversationContainerProps {
-  conversationId: string;
+  conversationId?: string;
 }
 
 export default function ConversationContainer({

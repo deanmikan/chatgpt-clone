@@ -135,8 +135,6 @@ export const useMessagesStore = create<MessagesState>((set, get) => {
       return data as Message;
     },
     updateMessage: async ({ id, content }, { greedy = false }) => {
-      console.log("updateMessage", id, content);
-
       if (greedy) {
         await set((state) => ({
           messages: state.messages.map((message) => {

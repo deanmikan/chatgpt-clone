@@ -13,9 +13,11 @@ import { useConversationsStore, useMessagesStore } from "@/store/conversations";
 import { useRouter } from "next/navigation";
 import MessageBox from "./MessageBox";
 import MessageFormHintsContainer from "./MessageFormHintsContainer";
+import { models } from "../../_constants/models";
+import { useSettingsStore } from "@/store/settings";
 
 interface MessageFormProps {
-  conversationId: string;
+  conversationId?: string;
 }
 
 // Create a context to hold the register function
@@ -30,9 +32,9 @@ export const useRegister = () => useContext(RegisterContext);
 
 export default function MessageForm({ conversationId }: MessageFormProps) {
   const router = useRouter();
+  const selectedModelId = useSettingsStore((state) => state.selectedModelId);
 
-  const { register, handleSubmit, getValues, reset, watch } =
-    useForm<FieldValues>({});
+  const { register, handleSubmit, reset, watch } = useForm<FieldValues>({});
   const createConversation = useConversationsStore(
     (state) => state.createConversation
   );
@@ -42,6 +44,8 @@ export default function MessageForm({ conversationId }: MessageFormProps) {
   const { user } = useUser();
 
   const onSubmit: SubmitHandler<FieldValues> = async (values) => {
+    const selectedModel = models.find((model) => model.id === selectedModelId);
+
     const userInput = values.userInput;
 
     if (!userInput || !user) {
@@ -73,6 +77,8 @@ export default function MessageForm({ conversationId }: MessageFormProps) {
       threadKey: "1",
     });
 
+    reset();
+
     // Then create the assistant's first message
     const newMessage = await createMessage({
       role: "assistant",
@@ -86,8 +92,6 @@ export default function MessageForm({ conversationId }: MessageFormProps) {
       return;
     }
 
-    reset();
-
     if (!conversationId) {
       router.push(`/c/${messageConversationId}`);
     }
@@ -99,6 +103,7 @@ export default function MessageForm({ conversationId }: MessageFormProps) {
         conversationId: messageConversationId,
         content: userInput,
         threadKey: "1",
+        model: selectedModel?.model,
       }),
     });
 
