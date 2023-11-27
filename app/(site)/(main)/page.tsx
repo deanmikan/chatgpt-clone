@@ -27,6 +27,7 @@ export default function HomePage() {
 
       <main className="flex flex-col flex-1 h-full overflow-y-auto transition-all">
         <ConversationContainer />
+
         <MessageForm />
       </main>
     </div>

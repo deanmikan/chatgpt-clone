@@ -24,8 +24,8 @@ export default function MessageFormHintsContainer({}: MessageFormHintsContainerP
 
   return (
     <div className="grid grid-cols-2 gap-2 px-2 mb-4">
-      {onboardingHints.map((hint) => (
-        <MessageFormHint key={hint.title} {...hint} />
+      {onboardingHints.map((hint, index) => (
+        <MessageFormHint key={hint.title} index={index} {...hint} />
       ))}
     </div>
   );

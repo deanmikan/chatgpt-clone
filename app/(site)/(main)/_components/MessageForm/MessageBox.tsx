@@ -22,7 +22,6 @@ export default function MessageBox() {
       <TextareaAutosize
         {...register("userInput", { required: true })}
         autoFocus
-        id="userInput"
         tabIndex={0}
         placeholder="Message MikanGPT..."
         className="m-0 w-full resize-none border-0 bg-transparent py-2 pr-10 focus:ring-0 focus-visible:ring-0 md:py-4 md:pr-12 pl-3 max-h-[200px] h-[52px] focus:outline-none overflow-y-hidden"

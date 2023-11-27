@@ -43,10 +43,26 @@ export default function MessageForm({ conversationId }: MessageFormProps) {
 
   const { user } = useUser();
 
-  const onSubmit: SubmitHandler<FieldValues> = async (values) => {
+  const onSubmit: SubmitHandler<FieldValues> = async (values, event) => {
     const selectedModel = models.find((model) => model.id === selectedModelId);
 
-    const userInput = values.userInput;
+    const submitEvent = event?.nativeEvent as SubmitEvent;
+    const submitter: HTMLElement = submitEvent.submitter!;
+
+    let userInput = "";
+
+    // Check if submitter was a hint
+    if (submitter?.id?.startsWith("hintButton")) {
+      const hintIndex = submitter.id.replace("hintButton", "");
+
+      const hintValue = values[`hint${hintIndex}`];
+
+      if (hintValue) {
+        userInput = hintValue;
+      }
+    } else {
+      userInput = values.userInput;
+    }
 
     if (!userInput || !user) {
       console.log("No input or no user");
