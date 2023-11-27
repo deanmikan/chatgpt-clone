@@ -10,6 +10,7 @@ import MessageForm from "../../_components/MessageForm";
 import { useMessagesStore } from "@/store/conversations";
 import { useEffect } from "react";
 
+// Todo make this all SSR
 export default function ConversationPage({
   params,
 }: {

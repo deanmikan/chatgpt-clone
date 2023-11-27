@@ -3,6 +3,7 @@ import Header from "./Header";
 import { useMessagesStore } from "@/store/conversations";
 import Message from "./Message";
 import { cn } from "@/lib/utils";
+import { useRef, useEffect } from "react";
 
 interface ConversationContainerProps {
   conversationId: string;
@@ -15,6 +16,14 @@ export default function ConversationContainer({
   const conversationMessages = allMessages.filter(
     (message) => message.conversation_id === conversationId
   );
+
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [conversationMessages]);
 
   return (
     <div className={cn("relative flex-1", conversationId && "overflow-y-auto")}>
@@ -37,6 +46,8 @@ export default function ConversationContainer({
             {conversationMessages.map((message) => (
               <Message key={message.id} message={message} />
             ))}
+
+            <div ref={messagesEndRef} />
           </div>
         </div>
       )}
