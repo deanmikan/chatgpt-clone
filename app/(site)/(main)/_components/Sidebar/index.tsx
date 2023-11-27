@@ -1,14 +1,13 @@
 "use client";
 
-import { cn } from "@/lib/utils";
-import { usePathname } from "next/navigation";
-import { useRef, ElementRef, useState, useEffect } from "react";
-import { useMediaQuery } from "usehooks-ts";
-import { FiEdit } from "react-icons/fi";
-import SidebarItem from "./SidebarItem";
-import { useUser } from "@/hooks/useUser";
 import OpenAILogo from "@/components/OpenAILogo";
-import { useConversationsStore } from "@/store/conversations";
+import { useUser } from "@/hooks/useUser";
+import { cn } from "@/lib/utils";
+import { ElementRef, useRef, useState } from "react";
+import { FiEdit } from "react-icons/fi";
+import { useMediaQuery } from "usehooks-ts";
+import Conversations from "./Conversations";
+import SidebarItem from "./SidebarItem";
 
 interface SidebarProps {}
 
@@ -21,10 +20,6 @@ export default function Sidebar({}: SidebarProps) {
   const [isResetting, setIsResetting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
   const [isHoveringToggle, setIsHoveringToggle] = useState(false);
-  const conversations = useConversationsStore((state) => state.conversations);
-  const fetchConversations = useConversationsStore(
-    (state) => state.fetchConversations
-  );
 
   const handleMouseDown = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -66,10 +61,6 @@ export default function Sidebar({}: SidebarProps) {
     else collapse();
   };
 
-  useEffect(() => {
-    fetchConversations();
-  }, []);
-
   return (
     <>
       <aside
@@ -95,18 +86,7 @@ export default function Sidebar({}: SidebarProps) {
           />
         </div>
         <div className="flex-1 p-3 overflow-x-hidden overflow-y-auto">
-          {conversations.length === 0 ? (
-            <div>No conversations</div>
-          ) : (
-            conversations.map((conversation) => (
-              <SidebarItem
-                key={conversation.id}
-                title={conversation.title}
-                variant="normal"
-                href={`/c/${conversation.id}`}
-              />
-            ))
-          )}
+          <Conversations />
         </div>
         <div className="flex-none p-3 overflow-x-hidden">
           {user && (
@@ -121,7 +101,6 @@ export default function Sidebar({}: SidebarProps) {
                 </div>
               }
               title={user.email!}
-              icon={FiEdit}
               variant="bold"
             />
           )}

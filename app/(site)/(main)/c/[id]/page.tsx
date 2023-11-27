@@ -1,14 +1,13 @@
 "use client";
 
-import Sidebar from "@/app/(site)/(main)/_components/Sidebar";
-import { Button } from "@/components/ui/button";
 import Spinner from "@/components/ui/spinner";
 import { useUser } from "@/hooks/useUser";
+import { useMessagesStore } from "@/store/conversations";
 import { redirect } from "next/navigation";
+import { useEffect } from "react";
 import ConversationContainer from "../../_components/ConversationContainer";
 import MessageForm from "../../_components/MessageForm";
-import { useMessagesStore } from "@/store/conversations";
-import { useEffect } from "react";
+import Sidebar from "../../_components/Sidebar";
 
 // Todo make this all SSR
 export default function ConversationPage({

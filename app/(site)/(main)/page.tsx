@@ -1,12 +1,11 @@
 "use client";
 
-import Sidebar from "@/app/(site)/(main)/_components/Sidebar";
-import { Button } from "@/components/ui/button";
 import Spinner from "@/components/ui/spinner";
 import { useUser } from "@/hooks/useUser";
 import { redirect } from "next/navigation";
-import MessageForm from "./_components/MessageForm";
 import ConversationContainer from "./_components/ConversationContainer";
+import MessageForm from "./_components/MessageForm";
+import Sidebar from "./_components/Sidebar";
 
 export default function HomePage() {
   const { user, isLoading } = useUser();
