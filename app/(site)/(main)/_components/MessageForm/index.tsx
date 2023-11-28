@@ -15,6 +15,7 @@ import MessageBox from "./MessageBox";
 import MessageFormHintsContainer from "./MessageFormHintsContainer";
 import { models } from "../../_constants/models";
 import { useSettingsStore } from "@/store/settings";
+import { generateConversationTitle } from "@/actions/conversations";
 
 interface MessageFormProps {
   conversationId?: string;
@@ -37,6 +38,9 @@ export default function MessageForm({ conversationId }: MessageFormProps) {
   const { register, handleSubmit, reset, watch } = useForm<FieldValues>({});
   const createConversation = useConversationsStore(
     (state) => state.createConversation
+  );
+  const updateConversation = useConversationsStore(
+    (state) => state.updateConversation
   );
   const createMessage = useMessagesStore((state) => state.createMessage);
   const updateMessage = useMessagesStore((state) => state.updateMessage);
@@ -88,6 +92,15 @@ export default function MessageForm({ conversationId }: MessageFormProps) {
       }
 
       messageConversationId = newConversation.id;
+
+      // Generate a new title
+      generateConversationTitle(userInput).then((newTitle: string) => {
+        // Update the conversation title
+        updateConversation({
+          id: messageConversationId!,
+          title: newTitle,
+        });
+      });
     }
 
     // Add the user's first message to the conversation
@@ -154,7 +167,7 @@ export default function MessageForm({ conversationId }: MessageFormProps) {
           content: finalString,
         },
         {
-          greedy: true,
+          optimisitc: true,
         }
       );
     }

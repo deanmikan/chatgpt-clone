@@ -12,6 +12,13 @@ type ConversationsState = {
   }: {
     user_id: string;
   }) => Promise<Conversation | undefined>;
+  updateConversation: ({
+    id,
+    title,
+  }: {
+    id: string;
+    title: string;
+  }) => Promise<Conversation | undefined>;
 };
 
 export const useConversationsStore = create<ConversationsState>((set, get) => {
@@ -53,6 +60,35 @@ export const useConversationsStore = create<ConversationsState>((set, get) => {
 
       return data as Conversation;
     },
+    updateConversation: async ({ id, title }) => {
+      const { data, error } = await supabase
+        .from("conversations")
+        .update({
+          title,
+        })
+        .eq("id", id)
+        .select("*")
+        .single();
+
+      if (error) {
+        console.error("THERE WAS AN ERROR", data, error);
+        return;
+      }
+
+      if (data) {
+        await set((state) => ({
+          conversations: state.conversations.map((conversation) => {
+            if (conversation.id === id) {
+              return data as Conversation;
+            }
+
+            return conversation;
+          }),
+        }));
+      }
+
+      return data as Conversation;
+    },
   };
 });
 
@@ -79,9 +115,9 @@ type MessagesState = {
       content: string;
     },
     {
-      greedy,
+      optimisitc,
     }: {
-      greedy?: boolean;
+      optimisitc?: boolean;
     }
   ) => Promise<Message | undefined>;
 };
@@ -134,8 +170,8 @@ export const useMessagesStore = create<MessagesState>((set, get) => {
 
       return data as Message;
     },
-    updateMessage: async ({ id, content }, { greedy = false }) => {
-      if (greedy) {
+    updateMessage: async ({ id, content }, { optimisitc = false }) => {
+      if (optimisitc) {
         await set((state) => ({
           messages: state.messages.map((message) => {
             if (message.id === id) {
@@ -164,7 +200,7 @@ export const useMessagesStore = create<MessagesState>((set, get) => {
         return;
       }
 
-      if (data && !greedy) {
+      if (data && !optimisitc) {
         await set((state) => ({
           messages: state.messages.map((message) => {
             if (message.id === id) {

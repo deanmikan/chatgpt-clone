@@ -28,41 +28,6 @@ export async function POST(request: Request) {
 
   if (messagesError) throw messagesError;
 
-  // If there is only one message, let's also create a title for the conversation.
-  if (messagesData.length === 1) {
-    const messages: ChatCompletionMessageParam[] = [
-      {
-        role: "system",
-        content: `Based on the message from the user, you are to summarise it into a title that is four words or less for the conversation thread. Return only the title in your response, nothing else.`,
-      },
-      {
-        content: `Message content: "${messagesData[0].content}"`,
-        role: "user",
-      },
-    ];
-
-    openai.chat.completions
-      .create({
-        model: json.model ?? "gpt-3.5-turbo-1106",
-        messages: messages,
-      })
-      .then((response) => {
-        return supabase
-          .from("conversations")
-          .update({
-            title: (response.choices[0].message.content ?? "").trim(),
-          })
-          .eq("id", json.conversationId)
-          .select("*")
-          .single();
-      })
-      .then(({ data: titleData, error: titleError }) => {
-        if (titleError) {
-          console.log("titleError", titleError);
-        }
-      });
-  }
-
   // Sort by created_at descending
   messagesData.sort((a, b) => {
     return (
