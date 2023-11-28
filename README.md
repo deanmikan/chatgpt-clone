@@ -8,6 +8,7 @@ This project is a personal code challenge attempting to clone ChatGPT. The proje
 
 ### Todo
 - Optimistic rendering (don't have to wait for DB to update before updating UI).
+- Database tables have no RLS (Row Level Security) set up yet.
 - Shareable converations.
 - Edit messages and create message threads.
 - Refactor pages/components to be SSR where possible.
