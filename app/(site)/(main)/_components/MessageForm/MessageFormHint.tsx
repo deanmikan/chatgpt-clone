@@ -6,14 +6,12 @@ interface MessageFormHintProps {
   title: string;
   subtitle: string;
   index: number;
-  onClick?: () => void;
 }
 
 export default function MessageFormHint({
   title,
   subtitle,
   index,
-  onClick,
 }: MessageFormHintProps) {
   const { register, watch, handleSubmit, onSubmit } =
     useContext(RegisterContext);
@@ -21,11 +19,12 @@ export default function MessageFormHint({
   return (
     <div>
       <input
-        {...register(`hint${index}`, { required: true })}
+        {...register(`hint${index}`)}
         className="hidden"
         value={`${title} ${subtitle}`}
         aria-label={`${title} ${subtitle}`}
       />
+
       <button
         id={`hintButton${index}`}
         className="relative flex items-center justify-between w-full gap-2 px-3 py-2 overflow-hidden text-left text-gray-700 border group rounded-xl hover:bg-gray-50"

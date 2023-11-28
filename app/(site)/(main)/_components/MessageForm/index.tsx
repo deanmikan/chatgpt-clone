@@ -158,8 +158,6 @@ export default function MessageForm({ conversationId }: MessageFormProps) {
         }
       );
     }
-
-    console.log("DONE", finalString);
   };
 
   return (
