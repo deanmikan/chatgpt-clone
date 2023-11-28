@@ -7,8 +7,6 @@ import { cookies } from "next/headers";
 import OpenAI from "openai";
 import { ChatCompletionMessageParam } from "openai/resources/index.mjs";
 
-export const runtime = "edge";
-
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY! });
 
 export async function POST(request: Request) {
