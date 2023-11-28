@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# ChatGPT Clone with NextJS and Supabase
 
-## Getting Started
+This project is a personal code challenge attempting to clone ChatGPT. The project is built using NextJS, and Supabase, an open-source Firebase alternative.
 
-First, run the development server:
+## Status
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+🚧 This is a work in progress and is not yet complete 🚧
+
+### Todo
+- Optimistic rendering (don't have to wait for DB to update before updating UI).
+- Shareable converations.
+- Edit messages and create message threads.
+- Refactor pages/components to be SSR where possible.
+- Use Framer Motion for pretty animations.
+- General code clean up.
+
+## Project Structure
+
+The project is structured as follows:
+
+- `app/`: Contains the main application logic and page-specific components.
+- `components/`: Contains reusable components.
+- `providers/`: Contains context providers.
+- `hooks/`: Contains custom React hooks.
+- `store/`: Contains the application state management logic.
+
+## Hosting
+
+The application is hosted on Vercel, a cloud platform for static sites and Serverless Functions.
+
+## Running the Project Locally
+
+P.s Currently, I have not share the migration files for the database schema. So this cannot be run locally.
+
+Nonetheless, to run the project locally, follow these steps:
+
+1. Clone the repository.
+2. Install the dependencies with `bun i`
+3. Start the development server with `bun dev`
+
+Please note that you will need to set up your own Supabase project and provide the necessary environment variables for the project to function correctly.
+
+```.env
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Contributing
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+This project is a personal code challenge and is not currently accepting contributions. However, you're welcome to fork the project and make your own modifications.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Please note that this is a personal project and is not affiliated with OpenAI in any way.
 
-## Learn More
+## License
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+This project is licensed under the MIT License.
