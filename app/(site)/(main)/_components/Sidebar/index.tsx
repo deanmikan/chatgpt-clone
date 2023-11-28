@@ -8,28 +8,18 @@ import { FiEdit } from "react-icons/fi";
 import { useMediaQuery } from "usehooks-ts";
 import Conversations from "./Conversations";
 import SidebarItem from "./SidebarItem";
+import ProfileMenu from "./ProfileMenu";
 
 interface SidebarProps {}
 
 export default function Sidebar({}: SidebarProps) {
   const isMobile = useMediaQuery("(max-width: 200px)");
-  const { user } = useUser();
 
   const isResizingRef = useRef(false);
   const sidebarRef = useRef<ElementRef<"aside">>(null);
   const [isResetting, setIsResetting] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(isMobile);
   const [isHoveringToggle, setIsHoveringToggle] = useState(false);
-
-  const handleMouseDown = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    isResizingRef.current = true;
-    document.addEventListener("mouseup", handleMouseUp);
-  };
 
   const handleMouseUp = () => {
     isResizingRef.current = false;
@@ -88,22 +78,8 @@ export default function Sidebar({}: SidebarProps) {
         <div className="flex-1 p-3 overflow-x-hidden overflow-y-auto">
           <Conversations />
         </div>
-        <div className="flex-none p-3 overflow-x-hidden">
-          {user && (
-            <SidebarItem
-              className="h-12 p-3"
-              leadingExtension={
-                <div
-                  aria-hidden
-                  className="flex items-center justify-center text-black bg-[#925CB1] rounded-full w-8 h-8"
-                >
-                  <span className="text-xs text-white">DM</span>
-                </div>
-              }
-              title={user.email!}
-              variant="bold"
-            />
-          )}
+        <div className="relative flex-none w-full p-3 overflow-x-hidden">
+          <ProfileMenu />
         </div>
       </aside>
 

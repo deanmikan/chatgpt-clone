@@ -48,9 +48,9 @@ export default function Message({ message }: MessageProps) {
           )}
 
           {/* Controls */}
-          {/* <div className="invisible empty:hidden group-hover:visible">
+          <div className="invisible empty:hidden ">
             <MessageControls message={message} />
-          </div> */}
+          </div>
         </div>
       </div>
     </div>
